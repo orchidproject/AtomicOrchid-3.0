@@ -1,6 +1,6 @@
 class Player
     
-  @@skill = ["medic","firefighter","soldier","transporter","UAV"] 
+  @@skill = ["medic","firefighter","soldier","transporter","plane"] 
     
   include DataMapper::Resource
   property :id, Serial, :index => true

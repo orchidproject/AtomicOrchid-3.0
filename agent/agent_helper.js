@@ -129,17 +129,11 @@ function Helper(game_id){
     this.player=new Object;
     this.game_id=game_id;
 
-   /*
-    this.socket_address='http://localhost:49991';
+   
+    /*this.socket_address='http://localhost:49991';
     this.ruby_address='localhost';
-    this.ruby_port=49992;
-   */ 
-
-    /* 
-     this.socketAddress='http://localhost:49991';
-     this.nodeAddress='http://localhost:8080';
-     this.rubyAddress='localhost';
-    */	
+    this.ruby_port=49992;*/
+    
    
     this.pointSet= {
 	t1:{lat:50.936151,lng:-1.397983},

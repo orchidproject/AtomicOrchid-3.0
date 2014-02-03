@@ -32,7 +32,7 @@ function fetchLocation(onResult){
 
         res.on('end', function() {
             var obj = JSON.parse(output);
-	    onResult(obj);
+	          onResult(obj);
         });
    });
 
@@ -66,16 +66,15 @@ fetchLocation(function(obj){
     	var helper = new Helper(game_id);
 		// get a socket io connection to server
 		var socket = helper.getSocket();
-    	helper.join('agent','a@agent.com','truck',1,'UA', function(p){
-    		if (p.user_id != null){
+    helper.join('agent','a@agent.com','truck',4,'UA', function(p){
+    	if (p.user_id != null){
     			//put to array
     			//unknown reason, to prevent multiple helpers being the same
     			var helper = {};
     			helper.player=p;
     			console.log(JSON.stringify(p) + "!!!!!!!!");
-        		UAVs.push({helper:helper,socket:socket});
-    		}
-    		
+        	UAVs.push({helper:helper,socket:socket});
+    	}
 		});
 	}
 	setInterval(mainloop,500);
