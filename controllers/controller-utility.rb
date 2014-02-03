@@ -147,6 +147,7 @@ class Controller < Sinatra::Base
      game.tasks.each do |t|
 		new_attributes = t.attributes
 		new_attributes.delete(:id)
+		new_attributes.delete(:state)
 		new_task=Task.create(new_attributes)
 		new_task.game=template
 		new_task.save
