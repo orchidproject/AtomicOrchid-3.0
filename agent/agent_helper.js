@@ -25,16 +25,14 @@ Helper.prototype.getSocket = function(){
         var game_id=this.game_id;
         so.on('game', function(data) {
             so.emit('game-join', game_id);
-        });
-    
+        }); 
 
         so.on('data', function(data) {
             console.log(data);
         });
         
         console.log(this.game_id);
-    }
-    
+    } 
     return so;
 
 }
@@ -119,17 +117,31 @@ Helper.prototype.pullGameStatus = function pullGameStatus(){
 
 
 function Helper(game_id){
+    this.socket_address='http://holt.mrl.nott.ac.uk:49991';
+    this.ruby_address='holt.mrl.nott.ac.uk';
+    this.ruby_port=49992;
+
+    this.socketAddress='http://holt.mrl.nott.ac.uk:49991';
+    this.nodeAddress='http://holt.mrl.nott.ac.uk:8080';
+    this.rubyAddress='holt.mrl.nott.ac.uk'; 
+
+
+    this.player=new Object;
+    this.game_id=game_id;
+
+   /*
     this.socket_address='http://localhost:49991';
     this.ruby_address='localhost';
     this.ruby_port=49992;
-    this.player=new Object;
-    this.game_id=game_id;
-    
-	this.socketAddress='http://localhost:49991';
-	this.nodeAddress='http://localhost:8080';
-	this.rubyAddress='localhost';
-	
-	this.pointSet= {
+   */ 
+
+    /* 
+     this.socketAddress='http://localhost:49991';
+     this.nodeAddress='http://localhost:8080';
+     this.rubyAddress='localhost';
+    */	
+   
+    this.pointSet= {
 	t1:{lat:50.936151,lng:-1.397983},
 	t2:{lat:50.935312,lng:-1.396825},
 	t3:{lat:50.934295,lng:-1.398466},
@@ -140,7 +152,7 @@ function Helper(game_id){
 	p2:{lat:50.93635,lng:-1.397785},
 	p3:{lat:50.936063,lng:-1.396685},
 	p4:{lat:50.935065,lng:-1.398987}
-	}
+    }
 	
     //this.socket=new Socket(socket_address);
 }

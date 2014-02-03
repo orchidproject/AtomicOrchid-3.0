@@ -4,16 +4,18 @@ usage:
 
 node agent.js [game_id]
 
-it moves an agent along a fix route
+//it moves an agent along a fix route
 
 */
 
 var events = require('events');
+var http = require('http');
 var RUBY_PORT = 49992;
 var game_id=process.argv[2];
 
 var Helper = require('./agent_helper');
 var helper = new Helper(game_id);
+
 // get a socket io connection to server
 var socket = helper.getSocket();
 
@@ -30,7 +32,6 @@ var RUBY_ADDRESS = helper.rubyAddress;
 
 //handlers and main loop
 var game_playing=false;
-var truckUpdateID;
 
 function setHandler(){
 
@@ -77,41 +78,45 @@ function setHandler(){
 
 
 function mainloop(){    
+  fetchLocation(function(obj){
+    console.log(obj.agents[0].coordinate.latitude); 
+    helper.player.lat=  obj.agents[0].coordinate.latitude; 
+    helper.player.lng=  obj.agents[0].coordinate.longitude;
+    updateTruckLocation();
+  });
+}
 
-    //push location to server ever half second
-    truckUpdateID=setInterval(updateTruckLocation, 500);
-    
-    //set initial postion
-    helper.player.lat=52.950978;
-    helper.player.lng=-1.186287;
-                
+function fetchLocation(onResult){
+  var options = {
+    host: 'localhost',
+    port: 8000,
+    path: '/state.json',
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  }; 
 
-    //move a truck along a path
-    //var path=[helper.player,helper.pointSet.p1,helper.pointSet.t1,helper.pointSet.p1,helper.pointSet.p0, //go get t1
-    //helper.pointSet.p1,helper.pointSet.t1,helper.pointSet.p2,helper.pointSet.p3,helper.pointSet.t2,helper.pointSet.p0,helper.pointSet.p4];
-    var path= [{lat:52.950978,lng:-1.186287},{lat:52.951246,lng:-1.1844},{lat:52.950978,lng:-1.186287}]; 
-    var section=0;
-    
-    //go along next section when previous section finished
-    event.on('section-finish', function(){
-        console.log(section+" section finish");
-        if (section<path.length-1){
-            moveTruck(path[section],path[section+1]);
-            section++;
-	    console.log("swithch section");
-        }
-        else{
-            section=0;
-            moveTruck(path[section],path[section+1]); 
-		console.log("final section"); 
-        }
-    });
+  var req = http.request(options, function(res) {
+        var output = '';
+        console.log(options.host + ':' + res.statusCode);
+        res.setEncoding('utf8');
 
+        res.on('data', function (chunk) {
+            output += chunk;
+        });
 
-    
-    moveTruck(path[section],path[section+1]);
-    
+        res.on('end', function() {
+            var obj = JSON.parse(output);
+	    onResult(obj);
+        });
+   });
 
+   //do not know what is this doing 
+   req.on('error', function(err) {
+       //res.send('error: ' + err.message);
+   });
+   req.end();
 }
 
 
@@ -179,7 +184,7 @@ function moveOneStep() {
 }
 
 //join game
-helper.join('agent','a@agent.com','truck',2,'AA', function(p){
+helper.join('agent','a@agent.com','truck',1,'AA', function(p){
     
     
     if (p.user_id != null){
@@ -198,8 +203,7 @@ helper.join('agent','a@agent.com','truck',2,'AA', function(p){
         //initialize
         helper.player=p;
         setHandler();
-        mainloop();
-        
+        setInterval(mainloop,500); 
         //console.log("game join successful");
     }
     console.log(p);
