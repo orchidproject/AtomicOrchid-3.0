@@ -29,7 +29,7 @@ data["tasks"].each do |p|
 		:latitude => p["latitude"] ,
 		:longitude =>p["longitude"],
 		:type =>p["type"],
-		:state =>p["state"],
+		
 		:players => p["players"]
 	) 
 

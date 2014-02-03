@@ -10,10 +10,12 @@ var taskIcon2 =  "task_icon2";
 var taskIcon3 =  "task_icon3";
 var taskIcon4 = "task_icon4";
 
+
 var medic = "/img/medic.png";
 var soldier =  "/img/soldier.png";
 var ambulance =  "/img/firefighter.png";
 var transporter = "/img/convertible.png";
+var uav = "/img/plane.png";
 var tick = "/img/tick.png";
 
 var chosen_task_type = 0;
@@ -135,6 +137,12 @@ function drawInstruction(pid,tid){
 }
 var tasks = [];
 function receiveTaskData(task){
+	//ignore invisible task
+	if(task.state == 4){
+		return ;
+	}
+
+
 	var existing_task=null;
 	for (i=0;i<tasks.length;i++) {
 		if (tasks[i].id==task.id){
