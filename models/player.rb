@@ -1,8 +1,6 @@
 class Player
     
-  @@skill = ["medic","firefighter","soldier","transporter"]
-    
-    
+  @@skill = ["medic","firefighter","soldier","transporter","UAV"] 
     
   include DataMapper::Resource
   property :id, Serial, :index => true
@@ -10,7 +8,6 @@ class Player
   #legcay  
   property :points_cache, Integer, :default => 0
   property :profile_image, String, :length => 255
-
 
   property :name, String
   property :created_at, DateTime

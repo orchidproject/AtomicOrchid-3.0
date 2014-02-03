@@ -203,12 +203,10 @@ class Controller < Sinatra::Base
 		puts "no instruction *********************************************************************************************************"  
 	     end
 
-
-
-             if (p.latitude == nil || p.longitude == nil)
-         	puts "no location for user #{p.id}"
-         	next
-             end 
+            if (p.latitude == nil || p.longitude == nil)
+         		puts "no location for user #{p.id}"
+         		next
+            end 
          	 
          	 
              if(sim.isOnMap(p.latitude, p.longitude))

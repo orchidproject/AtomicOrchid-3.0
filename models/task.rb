@@ -4,6 +4,7 @@ class Task
     PICKED_UP = 1
     DROPPED_DOWN = 2
     IDLE = 3
+    UNSEEN = 4
   end
 
  include DataMapper::Resource 
@@ -20,8 +21,7 @@ class Task
         ['transporter','soldier'],
         ['transporter','medic'],
         ['firefighter','medic'],
-        ['firefighter','soldier']
-        
+        ['firefighter','soldier']     
     ]
  
   property :type, Integer
@@ -35,7 +35,7 @@ class Task
   property :longitude, Decimal, :precision=>10 , :scale=>7
   property :players, String, :length => 255, :default => ""
   
-  property :state, Integer, :default=> State::IDLE
+  property :state, Integer, :default=> State::UNSEEN
 # has n, :players
     
   def requirement
@@ -77,7 +77,7 @@ class Task
   					end 
   				end 
   			else
-#  			puts "distance: #{p.distance_to self.latitude, self.longitude}"
+        #puts "distance: #{p.distance_to self.latitude, self.longitude}"
   			end
   		end
   		
@@ -208,9 +208,6 @@ class Task
 			  	  }
 			}
          }.to_json)
-  
   end
-  
-
 end
 
