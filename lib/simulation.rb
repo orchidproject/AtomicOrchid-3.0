@@ -296,10 +296,47 @@ class Simulation
         return arrayWithLatLng
     	
     end 
+    
+    #reveal on part of the map
+    def getVisiableFrame(time, coordinates)
+    	frame_number= getTimeIndex(time)
+    	frame = []
+    	
+    	coordinates.each do |l|
+    		cell = getGridCoord l.lat,l.log
+    		if isOnMap(l.lat,l.lng)
+    			frame << constructNode cell.x+1,cell.y,frame_number 
+    			frame << constructNode cell.x-1,cell.y,frame_number 
+    			frame << constructNode cell.x,cell.y,frame_number 
+    			frame << constructNode cell.x+1,cell.y-1,frame_number 
+    			frame << constructNode cell.x-1,cell.y-1,frame_number 
+    			frame << constructNode cell.x,cell.y-1,,frame_number 
+    			frame << constructNode cell.x-1,cell.y+1,frame_number
+    			frame << constructNode cell.x,cell.y+1,frame_number 
+    			frame << constructNode cell.x+1,cell.y+1,,frame_number
+    		end
+    	end
+    	
+    	return frame
+    end
+    #copy a 
+    def constructNode(x,y,frame_number)
+    	 x = cell.x
+    	 y = cell.y
+    	 node = nil
+    	 coords = getCoordsFromGrid(x,y)
+    	 if (x < 0) | (x > @x_size-1) | (y < 0) | (y > @y_size-1)
+    	 	value = (getReadingByIndex(y, x, frame_number)/10).floor
+    	 	#really?
+    		vframe = {:index=>"#{x}-#{y}",:value=>value,:lat=>coords.lat,:lng=>coords.lng}
+    	 end
+    	 node vframe
+    end
 
-#temperary method, need to be removed
+
+	#temperary method, need to be removed
     def getGridCoord(lat,lng)
-	return {:y=>getYIndex(lat), :x=>getXIndex(lng)}
+		return {:y=>getYIndex(lat), :x=>getXIndex(lng)}
     end 
 
     def getGridCirclePresentation(lat,lon,radius)
@@ -326,7 +363,7 @@ class Simulation
     end 
 
     def getCoordsFromGrid(x,y)
-	return  {:lat => getLat(y), :lng => getLong(x)}
+		return  {:lat => getLat(y), :lng => getLong(x)}
     end 
     
 end

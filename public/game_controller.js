@@ -81,6 +81,9 @@ function receiveHeatmapData(data){
     heatMap.setMap(map);
 }
 
+
+
+
 var HEAT_MAP_COLORS = ["#202020","#3B3B3B","#3B3D64","#3F3CAD","#4B85F3","#3CBDC3","#56D355","#FFFB3D","#FF9F48","#FD3B3B","#FD3B3B"];
 function pick_overlay(value, point){
 		var circleOptions = {
@@ -477,13 +480,6 @@ function pushToTaskHistory(message, identifier, player_initials, player_id,playe
 	var newscrollHeight = $("#chatbox").attr("scrollHeight") - 20;
 	$("#chatbox").animate({ scrollTop: newscrollHeight }, 'normal'); 
 }
-
-
-
-
-
-
-
 
 function handleTaskStatus(task){
 
