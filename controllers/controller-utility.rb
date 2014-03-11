@@ -171,8 +171,8 @@ class Controller < Sinatra::Base
 
  
   def update_game(game, frame)
-         puts "game update"
-         sim = $simulations[game.layer_id]
+    puts "game update"
+	sim = $simulations[game.layer_id]
 	 if(@init_plan_fetched == nil)
 	   agentFetchPlan(game.layer_id,frame)
 	   @init_plan_fetched=true
