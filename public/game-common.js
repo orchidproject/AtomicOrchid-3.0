@@ -218,6 +218,7 @@ function getTaskImage(task_type) {
 		imageURL = taskIcon4;
 	}
 	
+	
 	return imageURL;
 }
 

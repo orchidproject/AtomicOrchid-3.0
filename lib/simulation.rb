@@ -298,39 +298,38 @@ class Simulation
     end 
     
     #reveal on part of the map
-    def getVisiableFrame(time, coordinates)
-    	frame_number= getTimeIndex(time)
+    def getVisibleFrame(time, coordinates)
     	frame = []
     	
     	coordinates.each do |l|
-    		cell = getGridCoord l.lat,l.log
-    		if isOnMap(l.lat,l.lng)
-    			frame << constructNode cell.x+1,cell.y,frame_number 
-    			frame << constructNode cell.x-1,cell.y,frame_number 
-    			frame << constructNode cell.x,cell.y,frame_number 
-    			frame << constructNode cell.x+1,cell.y-1,frame_number 
-    			frame << constructNode cell.x-1,cell.y-1,frame_number 
-    			frame << constructNode cell.x,cell.y-1,,frame_number 
-    			frame << constructNode cell.x-1,cell.y+1,frame_number
-    			frame << constructNode cell.x,cell.y+1,frame_number 
-    			frame << constructNode cell.x+1,cell.y+1,,frame_number
+    		cell = getGridCoord l.latitude,l.longitude
+    		if isOnMap(l.latitude,l.longitude)
+    			constructNode(cell[:x]+1,cell[:y],time,frame )
+    			constructNode(cell[:x]-1,cell[:y],time,frame )
+    			constructNode(cell[:x],cell[:y],time,frame )
+    			constructNode(cell[:x]+1,cell[:y]-1,time,frame )
+    			constructNode(cell[:x]-1,cell[:y]-1,time,frame )
+    			constructNode(cell[:x],cell[:y]-1,time,frame )
+    			constructNode(cell[:x]-1,cell[:y]+1,time,frame)
+    			constructNode(cell[:x],cell[:y]+1,time,frame )
+    			constructNode(cell[:x]+1,cell[:y]+1,time,frame)
     		end
     	end
-    	
+
     	return frame
     end
     #copy a 
-    def constructNode(x,y,frame_number)
-    	 x = cell.x
-    	 y = cell.y
+    def constructNode(x,y,frame_number,frame)
     	 node = nil
+         puts x.to_s + " : " + y.to_s
     	 coords = getCoordsFromGrid(x,y)
-    	 if (x < 0) | (x > @x_size-1) | (y < 0) | (y > @y_size-1)
+    	 if !(x < 0) | (x > @x_size-1) | (y < 0) | (y > @y_size-1)
     	 	value = (getReadingByIndex(y, x, frame_number)/10).floor
     	 	#really?
-    		vframe = {:index=>"#{x}-#{y}",:value=>value,:lat=>coords.lat,:lng=>coords.lng}
+    		node = {:index=>"#{x}-#{y}",:value=>value,:lat=>coords[:lat],:lng=>coords[:lng]}
+
     	 end
-    	 node vframe
+    	 frame << node if !node.nil?
     end
 
 
