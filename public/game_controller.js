@@ -15,7 +15,7 @@ var playerIcons = {
 	red: new google.maps.MarkerImage("http://www.google.com/intl/en_us/mapfiles/ms/icons/red-dot.png", playerIconSize, playerIconOrigin, playerIconAnchor)
 }
 
-var ROLE_MAPPING = ["medic","firefighter","soldier","transporter"];
+var ROLE_MAPPING = ["medic","firefighter","soldier","transporter","plane"];
 
 var taskIcon = playerIcons['blue']; 
 var personSkillA = playerIcons['red'];
@@ -29,18 +29,46 @@ var rejections =[];
 
 
 //------------------------------------------HeatMapDrawing-----------------------------------
+var HCount = 0;
+
+var hUpdateReadings = function(data,indexing,hmData){
+	var i=0;
+    for (i=0; i<data.length; i++){
+       if(indexing[data[i].index]==null){
+       		if (data[i].value>0){
+				var point=new google.maps.LatLng(data[i].lat, data[i].lng);
+				hmData.push({
+					index: data[i].index,
+					location: point,
+					weight: parseFloat(data[i].value),
+					count:HCount
+				});	
+				//remember the index
+				indexing[data[i].index] = hmData.length-1;	
+       		}
+       }
+       else{
+			hmData[indexing[data[i].index]].weight = parseFloat(data[i].value);
+			hmData[indexing[data[i].index]].count = HCount; 
+       }
+    }   
+    HCount++;
+}
+
+
+//-------------------------- m1 ---------------------------
+var cHeatMapIndexing={};
+var cHeatMapData = [];
+var cHeatMap = null;
+
 //var backGroundRec;
 var heatMapIndexing={};
 var heatMapData = [];
 var heatMap=null ; 
 
 var hBuffer = [];
+
  
-
-var cHeatMapIndexing={};
-var cHeatMapData = [];
-var cHeatMap = null;
-
 function hFilterOverlapData(o1,o2,i2){
 	hBuffer = [];
 	hBuffer = hBuffer.concat(o2);
@@ -84,7 +112,7 @@ function drawOldHmap(){
     heatMap = new google.maps.visualization.HeatmapLayer({
 	    data: hBuffer, 
 	    opacity: 0.5,
-	    radius: 30,
+	    radius: 20,
 	    gradient: gradient
     });
 	
@@ -98,35 +126,14 @@ function drawNewHmap(){
 
     cHeatMap = new google.maps.visualization.HeatmapLayer({
 	    data: cHeatMapData, 
-	    opacity: 0.8,
-	    radius: 30 
+	    opacity: 0.7,
+	    radius: 20 
     });
 	
     cHeatMap.setMap(map);	
 }
 
-function hUpdateReadings(data,indexing,hmData){
-	var i=0;
-    for (i=0; i<data.length; i++){
-       if(indexing[data[i].index]==null){
-       		if (data[i].value>0){
-				var point=new google.maps.LatLng(data[i].lat, data[i].lng);
-				hmData.push({
-					index: data[i].index,
-					location: point,
-					weight: parseFloat(data[i].value)
-				});	
-				//remember the index
-				indexing[data[i].index] = hmData.length-1;	
-       		}
-       }
-       else{
-			hmData[indexing[data[i].index]].weight= parseFloat(data[i].value);
-       }
-    }
 
-   
-}
 
 function receiveHeatmapData(data){
 	hUpdateReadings(data,heatMapIndexing,heatMapData);
@@ -141,6 +148,78 @@ function receiveHeatmapData(data){
 	cHeatMapData = [];
 }
 
+
+//---------------------------------m2
+/*
+
+var cHeatMapIndexing={};
+var cHeatMapData = [];
+var heatMaps = [];
+
+
+var hDivide =function(data,n){
+	var datasets = [];
+	for(i=HCount; i> HCount-n; i--){
+		if(i>=0){
+			var frame = [];
+			$(data).each(function(index,value){
+				if(value.count==i){
+					frame.push(value);
+				}
+			});
+			datasets.push(frame);
+		}
+	}
+	return datasets;
+}
+
+var clearHeatMaps = function(){
+	$(heatMaps).each(function(i,v){
+		v.setMap(null);
+	})
+	heatMaps = [];
+}
+
+var hDrawHeatMap = function(data,opacity){
+
+	var gradient = [
+    'rgba(0, 255, 255, 0)',
+    'rgba(0, 255, 255, 1)',
+    'rgba(0, 191, 255, 1)',
+    'rgba(0, 127, 255, 1)',
+    'rgba(0, 63, 255, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 223, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(63, 0, 91, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
+  	]
+    var hm = new google.maps.visualization.HeatmapLayer({
+	    data: data, 
+	    opacity: opacity,
+	    radius: 20,
+	    gradient: gradient
+    });
+	
+    hm.setMap(map);
+    return hm;
+}
+
+var receiveHeatmapData = function(data){
+	hUpdateReadings(data,cHeatMapIndexing,cHeatMapData);
+	var datasets = hDivide(cHeatMapData,5);
+	clearHeatMaps();
+	$(datasets).each(function(index,value){
+		var hm = hDrawHeatMap(value,0.8-index*0.1);
+		heatMaps.push(hm);
+	});
+
+}
+*/
 //----------------------------------------HeatMap end -----------------------------------
 
 

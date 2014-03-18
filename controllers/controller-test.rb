@@ -355,6 +355,19 @@ end
 		response = data
 	elsif action == "fetch"
 		data = snapshot(Game.get(game_id), false,"fetch")
+
+		#delete uavs in 
+		non_player = []
+		data[:players].each do |p| 
+			if(p[:skill] == 4)
+				non_player << p
+			end
+		end
+		non_player.each do |n|
+			data[:players].delete(n)
+		end
+
+
 		data[:players].each do |p| 
 			result =  sim.getGridCoord(Float(p[:latitude]),Float(p[:longitude]))
 			p.delete(:latitude)

@@ -54,7 +54,12 @@ class Task
   
 	state_change = {:before=> self.state, :after=>nil}
 	
-  	if self.state==State::IDLE
+    if self.state==State::UNSEEN
+      if(reveal)
+        self.broadcast(socket)
+      end
+
+  	elsif self.state==State::IDLE
   		current_state = Array.new(@@task_type[self.type].length){ |i| 0 }
   		eligiable_players = []
   		
@@ -166,10 +171,19 @@ class Task
   	end
 
   	self.save	
-	state_change[:after] = self.state	
-	return  state_change
+	  state_change[:after] = self.state	
+	  return  state_change
   end 
   
+  def reveal
+    self.game.players.each do |p|      
+      if (p.distance_to self.latitude, self.longitude) <50 #approxi check
+        self.state=State::IDLE
+        return true
+      end
+    end
+    return false
+  end 
   
   
   def broadcast(socket)

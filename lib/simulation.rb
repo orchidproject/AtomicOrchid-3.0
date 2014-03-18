@@ -304,15 +304,15 @@ class Simulation
     	coordinates.each do |l|
     		cell = getGridCoord l.latitude,l.longitude
     		if isOnMap(l.latitude,l.longitude)
-    			constructNode(cell[:x]+1,cell[:y],time,frame )
-    			constructNode(cell[:x]-1,cell[:y],time,frame )
+    			#constructNode(cell[:x]+1,cell[:y],time,frame )
+    			#constructNode(cell[:x]-1,cell[:y],time,frame )
     			constructNode(cell[:x],cell[:y],time,frame )
-    			constructNode(cell[:x]+1,cell[:y]-1,time,frame )
-    			constructNode(cell[:x]-1,cell[:y]-1,time,frame )
-    			constructNode(cell[:x],cell[:y]-1,time,frame )
-    			constructNode(cell[:x]-1,cell[:y]+1,time,frame)
-    			constructNode(cell[:x],cell[:y]+1,time,frame )
-    			constructNode(cell[:x]+1,cell[:y]+1,time,frame)
+    			#constructNode(cell[:x]+1,cell[:y]-1,time,frame )
+    			#constructNode(cell[:x]-1,cell[:y]-1,time,frame )
+    			#constructNode(cell[:x],cell[:y]-1,time,frame )
+    			#constructNode(cell[:x]-1,cell[:y]+1,time,frame)
+    			#constructNode(cell[:x],cell[:y]+1,time,frame )
+    			#constructNode(cell[:x]+1,cell[:y]+1,time,frame)
     		end
     	end
 

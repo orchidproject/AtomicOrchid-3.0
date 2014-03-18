@@ -43,7 +43,7 @@ class Player
   end
 
   def updateHealth(so)
-	if (self.health >= 0 )
+	if (self.health >= 0 && self.skill != 4)
 		self.health=100-(self.exposure/10)
   	end	
  	broadcast_health(so)	 

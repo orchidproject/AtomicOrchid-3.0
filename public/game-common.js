@@ -40,15 +40,12 @@ var cg = {
 	
 };
 
-
-
 function getPlayerIcon(initials, skill) {
 
     var icon = cg.playerImage(initials,skill);
 	
 	return icon;
 }
-
 
 var highlightMarker=null;
 
@@ -114,7 +111,6 @@ function drawInstruction(pid,tid){
 			return;	
 		}
 
-
 		var t = findTaskById(tid);
 		var lat2 = t.marker.getPosition().lat();	
 		var lng2 = t.marker.getPosition().lng();	
@@ -132,8 +128,6 @@ function drawInstruction(pid,tid){
 		  p.previous_path = flightPath;
 		  flightPath.setMap(map);
 	}
-
-
 }
 var tasks = [];
 function receiveTaskData(task){
@@ -282,7 +276,7 @@ function receivePlayerData(data) {
 			p.marker.setIcon(markerIcon);
 		}
 
-		if(replay){ 
+		if((typeof replay != undefined)&&replay){ 
 			if(p.instruction!=null){
 				drawInstruction(p.id,p.instruction.task);
 			}	

@@ -674,32 +674,32 @@ class Controller < Sinatra::Base
         return {:error=>"game already begin"}.to_json
         
     else
-	game.update(:is_active=>0)
+	  game.update(:is_active=>0)
 
 		
-	#CHANGE TO ADAPT TO GRID SIZE (400/X)
-	#Library Jubilee Campus (debugging) 52.953664,-1.188509
-	#Wollaton Park 52.9491938, -1.2144399
-	#North of Jubilee campus 52.956046,-1.18878
+	  #CHANGE TO ADAPT TO GRID SIZE (400/X)
+	  #Library Jubilee Campus (debugging) 52.953664,-1.188509
+	  #Wollaton Park 52.9491938, -1.2144399
+	  #North of Jubilee campus 52.956046,-1.18878
 		
-        $simulations[game.layer_id] ||= Simulation.new("./cloud/"+game.simulation_file, 
-        game.sim_lat, 
-        game.sim_lng, 
-        game.grid_size, 
-        Time.now, 
-        game.sim_update_interval)
+    $simulations[game.layer_id] ||= Simulation.new("./cloud/"+game.simulation_file, 
+      game.sim_lat, 
+      game.sim_lng, 
+      game.grid_size, 
+      Time.now, 
+      game.sim_update_interval)
       
         
         
         
-        Thread.abort_on_exception = true
+  Thread.abort_on_exception = true
          
-        $mainloops[game.layer_id]  = Thread.new(game) { |g|
-        	count=0
-        	#6 sec waiting, lett clients get ready
-        	sleep 6
+    $mainloops[game.layer_id]  = Thread.new(game) { |g|
+    count=0
+    #6 sec waiting, lett clients get ready
+    sleep 6
         	
-            while(g.is_active==0) do
+    while(g.is_active==0) do
                 
             	g= Game.get g.layer_id
                 puts "game #{g.layer_id}, loop running count #{count}"
@@ -710,8 +710,9 @@ class Controller < Sinatra::Base
                 		t.broadcast(socketIO);
                 	end 
                 end
+                
                	time = Time.new 
-		frame=$simulations[g.layer_id].getTimeIndex(time)
+		            frame=$simulations[g.layer_id].getTimeIndex(time)
                 update_game(g,frame)
 				
 		if count%2==0
@@ -720,16 +721,16 @@ class Controller < Sinatra::Base
 			targetFrame = $simulations[g.layer_id].getVisibleFrame(time,g.players)
 					
 			if targetFrame
-                puts "heat map redraw in this loop"
-                    	socketIO.broadcast( 
-                                       { 
+            puts "heat map redraw in this loop"
+                  socketIO.broadcast( 
+                      { 
                                        :channel=> "#{game.layer_id}-1",             
                                        :data=>{
                                        #:heatmap=>@simulation.getTimeFrameWithLatLng(Time.now)
                                        #:heatmap=>targetFrame
                                         :heatmap=>targetFrame
-                                       }
-		    }.to_json)
+                      }
+		        }.to_json)
                     end
 
                     
