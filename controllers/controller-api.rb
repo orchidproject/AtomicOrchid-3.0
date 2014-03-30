@@ -50,7 +50,7 @@ class Controller < Sinatra::Base
 		#g = Game.last(:is_active => 0)
 		#Prediction.instances(g.layer_id).receive(data) if g
 		puts "====================="
-		puts request.body.read
+		puts request.body
 		puts "====================="
 	end
 end
