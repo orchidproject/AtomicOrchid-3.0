@@ -667,7 +667,7 @@ class Controller < Sinatra::Base
     game=Game.first :layer_id=>params[:layer_id]
     #snapshot to log when start
     File.open("logs/log-#{params[:layer_id]}-0", 'w') {|f| f.write(snapshot(game).to_s) }
-
+    
 
 
     if game.is_active!= -1
@@ -688,65 +688,62 @@ class Controller < Sinatra::Base
       game.grid_size, 
       Time.now, 
       game.sim_update_interval)
+
+    $simulations[game.layer_id].setTime(Time.now)
       
         
         
         
-  Thread.abort_on_exception = true
-         
+  Thread.abort_on_exception = true       
     $mainloops[game.layer_id]  = Thread.new(game) { |g|
     count=0
+    previous_frame = 0
     #6 sec waiting, lett clients get ready
     sleep 6
         	
     while(g.is_active==0) do
+      g= Game.get g.layer_id
+      puts "game #{g.layer_id}, loop running count #{count}"
                 
-            	g= Game.get g.layer_id
-                puts "game #{g.layer_id}, loop running count #{count}"
-                #initial update of task
+      #initial update of task          
+      if count==1 
+        g.tasks.each do |t|
+          t.broadcast(socketIO);
+        end 
+      end
                 
-                if count==1 
-                	g.tasks.each do |t|
-                		t.broadcast(socketIO);
-                	end 
-                end
-                
-               	time = Time.new 
-		            frame=$simulations[g.layer_id].getTimeIndex(time)
-                update_game(g,frame)
+      time = Time.new 
+		  frame=$simulations[g.layer_id].getTimeIndex(time)
+      update_game(g,frame,previous_frame)
 				
-		if count%2==0
-      #diffFrame can be nil, (when there is no diff between two frames) 
-			#diffFrame=$simulations[g.layer_id].getIndexedDiffFrame(time)
-			targetFrame = $simulations[g.layer_id].getVisibleFrame(time,g.players)
+		  if count%2==0
+        #diffFrame can be nil, (when there is no diff between two frames) 
+			  #diffFrame=$simulations[g.layer_id].getIndexedDiffFrame(time)
+			  targetFrame = $simulations[g.layer_id].getVisibleFrame(time,g.players)
 					
-			if targetFrame
+			  if targetFrame
             puts "heat map redraw in this loop"
                   socketIO.broadcast( 
                       { 
-                                       :channel=> "#{game.layer_id}-1",             
-                                       :data=>{
-                                       #:heatmap=>@simulation.getTimeFrameWithLatLng(Time.now)
-                                       #:heatmap=>targetFrame
-                                        :heatmap=>targetFrame
+                        :channel=> "#{game.layer_id}-1",             
+                        :data=>{
+                        #:heatmap=>@simulation.getTimeFrameWithLatLng(Time.now)
+                        #:heatmap=>targetFrame
+                        :heatmap=>targetFrame
                       }
 		        }.to_json)
-                    end
-
-                    
-                end
+        end
+      end
+      count=count+1
+      previous_frame = frame
+      sleep 1
                 
-                count=count+1
-                sleep 1
-                
-            end
-        }
-        
-        game.broadcast(socketIO, "start") 
-        redirect '/admin/games'
     end
-    
-    
+    }
+        
+      game.broadcast(socketIO, "start") 
+      redirect '/admin/games'
+    end
   end 
   
   put '/admin/games/:layer_id/reset' do

@@ -170,13 +170,13 @@ class Controller < Sinatra::Base
   end
 
  
-  def update_game(game, frame)
+  def update_game(game, frame, pframe)
     puts "game update"
 	sim = $simulations[game.layer_id]
-	 if(@init_plan_fetched == nil)
-	   agentFetchPlan(game.layer_id,frame)
-	   @init_plan_fetched=true
-	 end
+	 	if(@init_plan_fetched == nil)
+	   		agentFetchPlan(game.layer_id,frame)
+	   		@init_plan_fetched=true
+	 	end
         
 	 updatePlan = false 
 	 updateSession = false
@@ -198,10 +198,10 @@ class Controller < Sinatra::Base
 	     if(instruction != nil)
 		instruction.status=4
 		instruction.save
-		puts " instruction for " + p.id.to_s + " is rejected *********************************************************************************************" + instruction.id.to_s
+			# puts " instruction for " + p.id.to_s + " is rejected 
 		updatePlan = true
 	     else
-		puts "no instruction *********************************************************************************************************"  
+			#puts "no instruction"  
 	     end
 
             if (p.latitude == nil || p.longitude == nil)
@@ -229,13 +229,27 @@ class Controller < Sinatra::Base
              end
          end 
 	
-	 if(updateSession)
-		agentUpdateSession(game.layer_id,frame) 
-	 elsif(updatePlan)
-		agentFetchPlan(game.layer_id,frame) 
-	 end
+	 	if(updateSession)
+			agentUpdateSession(game.layer_id,frame) 
+		elsif(updatePlan)
+			agentFetchPlan(game.layer_id,frame) 
+	 	end
+	 	handle_prediction(game.layer_id,frame,pframe)
   end
   
+  def handle_prediction(game_id,frame,pframe)
+  	#fuse reading
+	p = Prediction.instances(game_id)
+  	if(frame == pframe)
+	 	data = agentSnapshot(game_id,frame,"report")
+	 	p.report(data)
+	 else
+	 	#next step
+	 	p.requestCurrent
+	 	p.next
+	 end
+  end 
+
   def check_radiation(latitude, longitude, game_id) 
     return    $simulations[game_id].getReadingByLatLong(latitude, longitude, Time.now)
   end
@@ -275,6 +289,7 @@ class Controller < Sinatra::Base
 	agent.pushFetchTask(data.to_json) do |res|
 		processResponse(game_id,res)		
 	end 
+	return data
   end
 
   def agentUpdateSession(game_id, frame)

@@ -9,6 +9,7 @@ require "net/http"
 require "uri"
 require "./lib/replay.rb" 
 require File.dirname(__FILE__) + '/lib/simulation.rb'
+require File.dirname(__FILE__) + '/lib/prediction.rb'
 
 class SocketIO
     

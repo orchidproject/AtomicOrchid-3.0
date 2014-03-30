@@ -55,6 +55,10 @@ class Simulation
     } 
 		
   end
+
+  def setTime(time)
+     @start_time = time
+  end
 	
     def isOnMap(lat, long)
         x = getXIndex(long)

@@ -320,17 +320,17 @@ end
 	game= Game.get(game_id)
 
 	#TODO not creating new instance is not efficient
-	sim = Simulation.new("cloud/simulation_data_03.txt", 
-		game.sim_lat, 
-		game.sim_lng, 
-		8, 
-		Time.now, 
-		0.2)
+	$simulations[game.layer_id] ||= Simulation.new("./cloud/"+game.simulation_file, 
+      game.sim_lat, 
+      game.sim_lng, 
+      game.grid_size, 
+      Time.now, 
+      game.sim_update_interval)
+	sim = $simulations[game.layer_id]
 
-
- 
-
-	 
+	if(game.is_active != 0 )
+		sim.setTime(Time.now)
+	end
 
 	if action == "init"
 		data = snapshot(Game.get(game_id), false,"init")
@@ -408,8 +408,14 @@ end
 		data[:session_id] = game_id
 	
 		response = data	
+	elsif action == "report"
+		data = snapshot(Game.get(game_id),false,"fetch")
+		response = []
+		data[:players].each do |p| 
+			result =  sim.getGridCoord(Float(p[:latitude]),Float(p[:longitude]))
+			response << [p[:id],result[:x],result[:y]]
+		end 	
 	end 
-
 	response
   end 
  
