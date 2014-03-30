@@ -11,10 +11,16 @@ class Prediction
 	end
 
 	def initialize(session_id)
-		@http = build_uri
-		body = {:id=> "INITIALISE_ESTIMATOR",:payload => ""}
-		response = @http[0].post(@http[1].path,body.to_json) 
-		#puts response
+		@host = 'osculate.it'
+		@port = '3000'
+		@post_ws = "/"
+
+		json = {"id"=> "INITIALISE_ESTIMATOR","payload" => ""}.to_json
+		req = Net::HTTP::Post.new(@post_ws, initheader = {'Content-Type' =>'application/json'})
+        req.body = json
+        response = Net::HTTP.new(@host, @port).start {|http| http.request(req) }
+        puts "Response #{response.code} #{response.message}:
+        #{response.body}"
 	end
 
 	def build_uri
@@ -37,15 +43,21 @@ class Prediction
 	end 
 
 	def report(data)
-		body = {:id=> "FUSE_MEASUREMENTS",:payload => data}
-		response = @http[0].post(@http[1].path,body.to_json) 
-		puts "prediction " + data.to_json
+		body = {"id"=> "FUSE_MEASUREMENTS","payload" => data}.to_json
+		req = Net::HTTP::Post.new(@post_ws, initheader = {'Content-Type' =>'application/json'})
+        req.body = json
+        response = Net::HTTP.new(@host, @port).start {|http| http.request(req) }
+        puts "Response #{response.code} #{response.message}:
+        #{response.body}"
 	end 
 
 	def next
-		body = {:id=> "NEXT_STEP",:payload => ""}
-		response = @http[0].post(@http[1].path,body.to_json) 
-		puts "prediction next step" + response.body
+		json = {"id"=> "NEXT_STEP","payload" => ""}.to_json
+		req = Net::HTTP::Post.new(@post_ws, initheader = {'Content-Type' =>'application/json'})
+        req.body = json
+        response = Net::HTTP.new(@host, @port).start {|http| http.request(req) }
+        puts "Response #{response.code} #{response.message}:
+        #{response.body}"
 	end 
 
 	def receive(data)
@@ -54,8 +66,21 @@ class Prediction
 	end
 
 	def requestCurrent
-		body = {:id=> "REQUEST_CURRENT_STATE",:payload => ""}
-		response = @http[0].post(@http[1].path,body.to_json) 
-		puts "prediction requestCurrent" + response.body
+		json ={
+    		"id" => "REQUEST_CURRENT_STATE",
+    		"payload" => "",
+  	 	}.to_json
+    	req = Net::HTTP::Post.new(@post_ws, initheader = {'Content-Type' =>'application/json'})
+        req.body = json
+        response = Net::HTTP.new(@host, @port).start {|http| http.request(req) }
+        puts "Response #{response.code} #{response.message}:
+        #{response.body}"
 	end
 end
+
+
+
+ 
+
+
+
