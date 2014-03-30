@@ -44,10 +44,11 @@ class Controller < Sinatra::Base
 	end
 
 
-	post '/game/receive_plan'  do
+	post '/prediction'  do
 		#they do not suppor mult-session currently
 		data = JSON.parse(request.body.read)
-		g = Game.last(:is_active => 0)
-		Prediction.instances(g.layer_id).receive(data) if g	
+		#g = Game.last(:is_active => 0)
+		#Prediction.instances(g.layer_id).receive(data) if g
+		puts data.to_json
 	end
 end
