@@ -13,7 +13,7 @@ class Prediction
 	def initialize(session_id)
 		@http = build_uri
 		body = {:id=> "INITIALISE_ESTIMATOR",:payload => ""}
-		#response = @http[0].post(@http[1].path,body.to_json) 
+		response = @http[0].post(@http[1].path,body.to_json) 
 		#puts response
 	end
 
@@ -37,15 +37,15 @@ class Prediction
 	end 
 
 	def report(data)
-		#body = {:id=> "FUSE_MEASUREMENTS",:payload => data}
-		#response = @http[0].post(@http[1].path,body.to_json) 
+		body = {:id=> "FUSE_MEASUREMENTS",:payload => data}
+		response = @http[0].post(@http[1].path,body.to_json) 
 		puts "prediction " + data.to_json
 	end 
 
 	def next
-		#body = {:id=> "NEXT_STEP",:payload => ""}
-		#response = @http[0].post(@http[1].path,body.to_json) 
-		puts "prediction next step"
+		body = {:id=> "NEXT_STEP",:payload => ""}
+		response = @http[0].post(@http[1].path,body.to_json) 
+		puts "prediction next step" + response.body
 	end 
 
 	def receive(data)
@@ -54,7 +54,8 @@ class Prediction
 	end
 
 	def requestCurrent
-		#body = {:id=> "REQUEST_CURRENT_STATE",:payload => ""}
-		#response = @http[0].post(@http[1].path,body.to_json) 
+		body = {:id=> "REQUEST_CURRENT_STATE",:payload => ""}
+		response = @http[0].post(@http[1].path,body.to_json) 
+		puts "prediction requestCurrent" + response.body
 	end
 end
