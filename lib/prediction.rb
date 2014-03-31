@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'json'
+
 class Prediction
 
 	@@instances = []	
@@ -11,7 +12,8 @@ class Prediction
 	end
 
 	def initialize(session_id)
-		@host = 'osculate.it'
+		#@host = 'osculate.it'
+		@host = "192.67.94.231"
 		@port = '3000'
 		@post_ws = "/"
 
@@ -24,7 +26,7 @@ class Prediction
 	end
 
 	def build_uri
-		uri = URI("http://osculate.it:3000/")
+		uri = URI("http://192.67.94.231:3000/")
 		http = nil
 =begin
 		if (Controller::PROXY_ADDRESS == "no_proxy")	
@@ -77,10 +79,3 @@ class Prediction
         #{response.body}"
 	end
 end
-
-
-
- 
-
-
-
