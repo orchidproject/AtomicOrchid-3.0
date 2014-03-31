@@ -52,8 +52,8 @@ class Controller < Sinatra::Base
 
 		data = JSON.parse(request.body.read)
 		if data["id"] == "REQUEST_CURRENT_STATE"
-			data["payload"]["MEAN"].each_with_index |row,y|
-				row.each_with_index |value,x|
+			data["payload"]["MEAN"].each_with_index  do |row,y|
+				row.each_with_index do |value,x|
 					data_to_send << sim.constructNodeWithValue(x,y,value)
 				end
 			end
