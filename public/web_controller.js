@@ -45,12 +45,14 @@ $(document).ready(function() {
 	if(typeof data.health!="undefined"){
 		receiveHealthData(data.health);
 	}
-       
-        
-        
               
         if(typeof data.heatmap != "undefined"){
+            if(prediction){
+              receiveHeatmapDataV2(data.heatmap);
+            }
+            else{
               receiveHeatmapData(data.heatmap);
+            }
         }
         
         //not sure whether this is implemented

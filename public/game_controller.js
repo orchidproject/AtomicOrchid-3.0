@@ -147,6 +147,38 @@ function receiveHeatmapData(data){
     cHeatMapIndexing=[];
 	cHeatMapData = [];
 }
+//----------------------------------------Old Heatmap drawing --------------------------- 
+function receiveHeatmapDataV2(data){
+    var i=0;
+    for (i=0; i<data.length; i++){
+       if(heat_map[data[i].index]==null){
+       		if (data[i].value>0){
+			var point=new google.maps.LatLng(data[i].lat, data[i].lng);
+			heatMapData.push({
+				location: point,
+				weight: parseFloat(data[i].value)
+			});	
+			//remember the index
+			heat_map[data[i].index] = heatMapData.length-1;	
+       		}
+       }
+       else{
+		heatMapData[heat_map[data[i].index]].weight= parseFloat(data[i].value);
+       }
+    }
+
+    if(heatMap != null){
+	heatMap.setMap(null); 
+    }
+
+    heatMap = new google.maps.visualization.HeatmapLayer({
+	    data: heatMapData, 
+	    radius: 20 
+    });
+
+    heatMap.setMap(map);
+}
+//-------------------------------------------------------------------------
 
 
 //---------------------------------m2
@@ -221,10 +253,6 @@ var receiveHeatmapData = function(data){
 }
 */
 //----------------------------------------HeatMap end -----------------------------------
-
-
-
-
 
 var log="";
 function saveLog(data){

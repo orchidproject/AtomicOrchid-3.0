@@ -336,6 +336,10 @@ class Simulation
     	 frame << node if !node.nil?
     end
 
+    def constructNodeWithValue(x,y,value)
+        coords = getCoordsFromGrid(x,y)
+        return {:index=>"#{x}-#{y}",:value=>value,:lat=>coords[:lat],:lng=>coords[:lng]}
+    end 
 
 	#temperary method, need to be removed
     def getGridCoord(lat,lng)

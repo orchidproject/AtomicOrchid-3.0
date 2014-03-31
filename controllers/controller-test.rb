@@ -318,19 +318,7 @@ end
   def agentSnapshot(game_id,sec,action)
 	#data should be a ruby hash, comply to game state format
 	game= Game.get(game_id)
-
-	#TODO not creating new instance is not efficient
-	$simulations[game.layer_id] ||= Simulation.new("./cloud/"+game.simulation_file, 
-      game.sim_lat, 
-      game.sim_lng, 
-      game.grid_size, 
-      Time.now, 
-      game.sim_update_interval)
-	sim = $simulations[game.layer_id]
-
-	if(game.is_active != 0 )
-		sim.setTime(Time.now)
-	end
+	getSim(game)
 
 	if action == "init"
 		data = snapshot(Game.get(game_id), false,"init")

@@ -45,13 +45,24 @@ class Controller < Sinatra::Base
 
 
 	post '/prediction'  do
-		#they do not suppor mult-session currently
-		#data = JSON.parse(request.body.read)
-		#g = Game.last(:is_active => 0)
-		#Prediction.instances(g.layer_id).receive(data) if g
-		puts "====================="
-		puts params
-		puts "====================="
-		
+		game= Game.last(:is_active => 0)
+		sim = getSim(game)
+		data_to_send = [];
+
+
+		data = JSON.parse(request.body.read)
+		if data["id"] == "REQUEST_CURRENT_STATE"
+			data["payload"]["MEAN"].each_with_index |row,y|
+				row.each_with_index |value,x|
+					data_to_send << sim.constructNodeWithValue(x,y,value)
+				end
+			end
+			socketIO.broadcast({ 
+                    :channel=> "#{game.layer_id}-5",  #to a extra channel so that the agent can decide to listen to it or not.           
+                    :data=>{
+                        :heatmap=>data_to_send
+                    }
+		    }.to_json)
+		end 
 	end
 end

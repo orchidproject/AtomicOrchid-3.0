@@ -277,10 +277,22 @@ class Controller < Sinatra::Base
   end 
 
 
-  get '/test/:game/fetchtest' do 
-	agentFetchPlan(params[:game].to_i,0)
-	
-  end  
+  def getSim(game)
+  	#TODO not creating new instance is not efficient
+	$simulations[game.layer_id] ||= Simulation.new("./cloud/"+game.simulation_file, 
+      game.sim_lat, 
+      game.sim_lng, 
+      game.grid_size, 
+      Time.now, 
+      game.sim_update_interval)
+	sim = $simulations[game.layer_id]
+
+	if(game.is_active != 0 )
+		sim.setTime(Time.now)
+	end
+
+  end
+
 
 
   def agentFetchPlan(game_id,frame)
