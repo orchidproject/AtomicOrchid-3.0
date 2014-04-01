@@ -147,7 +147,8 @@ function receiveHeatmapData(data){
     cHeatMapIndexing=[];
 	cHeatMapData = [];
 }
-//----------------------------------------Old Heatmap drawing --------------------------- 
+//----------------------------------------Old Heatmap drawing ---------------------------
+var heat_map = []; 
 function receiveHeatmapDataV2(data){
     var i=0;
     for (i=0; i<data.length; i++){

@@ -211,19 +211,21 @@ class Controller < Sinatra::Base
          	 
          	 
              if(sim.isOnMap(p.latitude, p.longitude))
-	        if (p.exposure > 1000 )
+	        	if (p.exposure > 1000 )
                 	p.status="incapacitated"
-			p.save
+					p.save
                 	p.broadcast(socketIO)
                 else
-			p.current_exposure = check_radiation(p.latitude,p.longitude,game.layer_id)
-			p.exposure = p.exposure + (p.current_exposure*0.2)
+                	if(p.skill != 4)
+						p.current_exposure = check_radiation(p.latitude,p.longitude,game.layer_id)
+						p.exposure = p.exposure + (p.current_exposure*0.2)
                  
-			#broadcast exposure
-			p.updateHealth(socketIO)
-      			p.broadcast_curr_exposure(socketIO)           
-			p.save
-		end 
+						#broadcast exposure
+						p.updateHealth(socketIO)
+      					p.broadcast_curr_exposure(socketIO)           
+						p.save
+					end
+				end 
              else
                 puts "unit not in the boundary"
              end
@@ -234,7 +236,7 @@ class Controller < Sinatra::Base
 		elsif(updatePlan)
 			agentFetchPlan(game.layer_id,frame) 
 	 	end
-	 	handle_prediction(game.layer_id,frame,pframe)
+	 	#handle_prediction(game.layer_id,frame,pframe)
   end
   
   def handle_prediction(game_id,frame,pframe)
@@ -290,6 +292,8 @@ class Controller < Sinatra::Base
 	if(game.is_active != 0 )
 		sim.setTime(Time.now)
 	end
+
+	return sim
 
   end
 

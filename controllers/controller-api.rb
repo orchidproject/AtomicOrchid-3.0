@@ -58,11 +58,13 @@ class Controller < Sinatra::Base
 				end
 			end
 			socketIO.broadcast({ 
-                    :channel=> "#{game.layer_id}-5",  #to a extra channel so that the agent can decide to listen to it or not.           
-                    :data=>{
-                        :heatmap=>data_to_send
-                    }
+                :channel=> "#{game.layer_id}-5",  #to a extra channel so that the agent can decide to listen to it or not.           
+                :data=>{
+                    :heatmap=>data_to_send
+                }
 		    }.to_json)
+
+		    puts "prediction_result " + data_to_send
 		end 
 	end
 end

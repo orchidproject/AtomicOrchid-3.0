@@ -318,7 +318,7 @@ end
   def agentSnapshot(game_id,sec,action)
 	#data should be a ruby hash, comply to game state format
 	game= Game.get(game_id)
-	getSim(game)
+	sim = getSim(game)
 
 	if action == "init"
 		data = snapshot(Game.get(game_id), false,"init")

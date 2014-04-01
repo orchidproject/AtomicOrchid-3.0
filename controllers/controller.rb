@@ -733,7 +733,7 @@ class Controller < Sinatra::Base
             puts "heat map redraw in this loop"
                   socketIO.broadcast( 
                       { 
-                        :channel=> "#{game.layer_id}-1",             
+                        :channel=> "#{game.layer_id}-6",             
                         :data=>{
                         #:heatmap=>@simulation.getTimeFrameWithLatLng(Time.now)
                         #:heatmap=>targetFrame
@@ -742,6 +742,25 @@ class Controller < Sinatra::Base
 		        }.to_json)
         end
       end
+
+
+      if count%6==0
+        #diffFrame can be nil, (when there is no diff between two frames) 
+        diffFrame=$simulations[g.layer_id].getIndexedDiffFrame(time)
+        if diffFrame
+            puts "heat map redraw in this loop"
+                  socketIO.broadcast( 
+                      { 
+                        :channel=> "#{game.layer_id}-5",             
+                        :data=>{
+                        #:heatmap=>@simulation.getTimeFrameWithLatLng(Time.now)
+                        #:heatmap=>targetFrame
+                        :heatmap=>diffFrame
+                      }
+            }.to_json)
+        end
+      end
+
       count=count+1
       previous_frame = frame
       sleep 1

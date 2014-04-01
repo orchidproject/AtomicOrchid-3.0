@@ -34,7 +34,14 @@ $(document).ready(function() {
         //alert("join " + $("#group_token").val());
         //channel and id pair needed for hand shaking 
 		socket.emit('game-join', {channel:$("#group_token").val()+"-1",id:-1});
-		socket.emit('game-join', {channel:$("#group_token").val()+"-2",id:-1});
+        socket.emit('game-join', {channel:$("#group_token").val()+"-2",id:-1});
+        if(prediction == false){
+		  socket.emit('game-join', {channel:$("#group_token").val()+"-6",id:-1});
+        }
+        else{
+          socket.emit('game-join', {channel:$("#group_token").val()+"-5",id:-1});
+        }
+
 		socket.emit('game-join', {channel:$("#group_token").val(),id:-1});
 	});
     
