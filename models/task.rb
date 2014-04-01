@@ -177,7 +177,7 @@ class Task
   
   def reveal
     self.game.players.each do |p|      
-      if (p.distance_to self.latitude, self.longitude) <50 #approxi check
+      if (p.distance_to(self.latitude, self.longitude) <50 && p.skill != 4 )#approxi check
         self.state=State::IDLE
         return true
       end
